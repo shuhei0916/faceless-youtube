@@ -38,20 +38,8 @@ async function detectAllFaces() {
     // 4, 認識結果のリサイズ
     const rData = await faceapi.resizeResults(fData, iSize);
     rData.forEach(data => {
-        drawResult(data);
         applyMosaic(data.detection.box);  // 顔にモザイク処理を適用
     });
-}
-
-function drawResult(data) {
-    console.log("drawResult!!");
-
-    const box = data.detection.box; // 長方形のデータ
-
-    context.fillStyle = "red";
-    context.strokeStyle = "red";
-    context.lineWidth = 4;
-    context.strokeRect(box.x, box.y, box.width, box.height); // 長方形の描画
 }
 
 function applyMosaic(box) {
