@@ -61,7 +61,7 @@ function applyMosaic(box) {
 // モザイク処理（サンプル）
 function mosaicFilter(imageData) {
     const pixels = imageData.data;
-    const blockSize = 10; // モザイクのサイズ
+    const blockSize = 5; // モザイクのサイズ
 
     for (let y = 0; y < imageData.height; y += blockSize) {
         for (let x = 0; x < imageData.width; x += blockSize) {
