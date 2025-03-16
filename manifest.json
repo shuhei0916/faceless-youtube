@@ -1,0 +1,19 @@
+{
+  "manifest_version": 3,
+  "name": "Faceless YouTube",
+  "version": "1.0",
+  "description": "顔認識とモザイク処理をYouTubeに適用",
+  "permissions": ["activeTab"],
+  "content_scripts": [
+    {
+      "matches": ["https://www.youtube.com/*"],
+      "js": ["content_script.js"]
+    }
+  ],
+  "host_permissions": [
+    "https://www.youtube.com/*"
+  ],
+  "background": {
+    "service_worker": "background.js"
+  }
+}
