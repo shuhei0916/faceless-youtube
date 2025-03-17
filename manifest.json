@@ -1,16 +1,23 @@
 {
-  "manifest_version": 3,
-  "name": "Faceless YouTube",
-  "version": "1.0",
-  "description": "顔認識とモザイク処理をYouTubeに適用",
-  "permissions": ["activeTab"],
-  "content_scripts": [
-    {
-      "matches": ["https://www.youtube.com/*"],
-      "js": ["content_script.js"]
-    }
-  ],
-  "host_permissions": [
-    "https://www.youtube.com/*"
-  ]
-}
+    "manifest_version": 3,
+    "name": "Faceless YouTube",
+    "version": "1.0",
+    "description": "顔認識とモザイク処理をYouTubeに適用",
+    "permissions": ["activeTab"],
+    "host_permissions": [
+      "https://www.youtube.com/*"
+    ],
+    "content_scripts": [
+      {
+        "matches": ["https://www.youtube.com/*"],
+        "js": ["face-api.js", "content_script.js"]
+      }
+    ],
+    "web_accessible_resources": [
+      {
+        "resources": ["weights/*"],
+        "matches": ["https://www.youtube.com/*"]
+      }
+    ]
+  }
+  
