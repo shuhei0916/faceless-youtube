@@ -1,8 +1,5 @@
 const MODEL_URL = chrome.runtime.getURL("weights/");
 
-loadModels();
-setupObserver();
-
 async function loadModels() {
     await Promise.all([
         faceapi.nets.tinyFaceDetector.loadFromUri(MODEL_URL)
@@ -33,7 +30,7 @@ async function applyFaceDetection(img) {
     }
 
     try {
-        const options = new faceapi.TinyFaceDetectorOptions({ scoreThreshold: 0.4 });
+        const options = new faceapi.TinyFaceDetectorOptions({ inputSize: 512, scoreThreshold: 0.1 });
         const detections = await faceapi.detectAllFaces(img, options);
 
         if (detections.length > 0) {
@@ -53,7 +50,15 @@ async function applyFaceDetection(img) {
             img.src = canvas.toDataURL();
         }
     } catch (error) {
-        // エラーはコンソールに出力するが、処理は続行
         console.error("Faceless YouTube Error:", error);
     }
 }
+
+async function init() {
+    await loadModels();
+    // 最初に表示されている画像を処理
+    document.querySelectorAll("ytd-thumbnail img, ytm-shorts-lockup-view-model-v2 img").forEach(applyFaceDetection);
+    setupObserver();
+}
+
+init();
