@@ -16,15 +16,18 @@
       "https://www.youtube.com/*"
     ],
     "js": [
-      "face-api.js",
-      "content_script.js"
+      "assets/face-api.js",
+      "src/content/content_script.js"
     ]
   }
 ],
+"action": {
+  "default_popup": "src/popup/popup.html"
+},
 "web_accessible_resources": [
   {
     "resources": [
-      "weights/*"
+      "assets/weights/*"
     ],
     "matches": [
       "https://www.youtube.com/*"

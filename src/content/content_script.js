@@ -1,4 +1,4 @@
-const MODEL_URL = chrome.runtime.getURL("weights/");
+const MODEL_URL = chrome.runtime.getURL("assets/weights/");
 
 async function loadModels() {
     await Promise.all([

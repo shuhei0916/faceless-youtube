@@ -1,5 +1,5 @@
-const FILE_URL  = "./assets/sample_01.png";
-const MODEL_URL = "./weights";
+const FILE_URL  = "../../assets/sample_01.png";
+const MODEL_URL = "../../assets/weights";
 
 let img, canvas, context;
 
