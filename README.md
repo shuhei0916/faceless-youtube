@@ -1,1 +1,2 @@
 # faceless-youtube
+youtube中毒から抜け出す手助けをするためのchromeの拡張機能を作成する。
