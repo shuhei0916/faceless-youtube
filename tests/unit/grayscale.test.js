@@ -1,4 +1,4 @@
-const { applyGrayscale } = require('../../src/content/grayscale');
+const { applyGrayscale } = require('../../src/content/features/grayscale');
 
 describe('Grayscale Logic', () => {
   test('should add grayscale class to all thumbnail types', () => {
