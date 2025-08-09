@@ -4,14 +4,14 @@
   "description": "youtube中毒から抜け出す手助けをするためのchromeの拡張機能を作成する。",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "jest",
+    "build": "rm -rf dist && mkdir dist && cp manifest.json dist/ && cp -r src/ dist/src/ && cp -r assets/ dist/assets/"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "devDependencies": {
     "jest": "^30.0.5",
-    "jest-puppeteer": "^11.0.0",
-    "puppeteer": "^24.16.0"
+    "jest-environment-jsdom": "^30.0.5"
   }
 }
