@@ -1,57 +1,47 @@
-// =============================================
-// features/grayscale.js からのコピー
-// =============================================
-function applyGrayscale() {
-  const images = document.querySelectorAll('ytd-thumbnail img, yt-thumbnail-view-model img, top-landscape-image-layout-view-model img, ytm-shorts-lockup-view-model img');
-  images.forEach(img => {
-    if (!img.classList.contains('grayscale')) {
-      img.classList.add('grayscale');
-    }
-  });
+function applyGrayscale(img) {
+  if (!img.classList.contains('grayscale')) {
+    img.classList.add('grayscale');
+  }
 }
 
-// =============================================
-// features/mosaic.js からのコピー
-// =============================================
-async function applyMosaic(imageElement) {
-  if (!imageElement || !(imageElement instanceof HTMLImageElement) || imageElement.dataset.mosaicApplied) {
+async function applyMosaic(img) {
+  if (!img || !(img instanceof HTMLImageElement) || img.dataset.mosaicApplied) {
     return;
   }
+
+  // CORSポリシーを回避するために属性を設定
+  img.crossOrigin = 'anonymous';
   
-  if (!imageElement.complete) {
+  if (!img.complete) {
     await new Promise(resolve => {
-      imageElement.onload = resolve;
-      imageElement.onerror = resolve;
+      img.onload = resolve;
+      img.onerror = resolve;
     });
   }
   
-  if (imageElement.naturalWidth === 0 || imageElement.naturalHeight === 0) {
+  if (img.naturalWidth === 0 || img.naturalHeight === 0) {
     return;
   }
 
-  imageElement.dataset.mosaicApplied = 'true';
+  img.dataset.mosaicApplied = 'true';
 
   try {
-    // face-api.jsの読み込みを待つ
     if (typeof faceapi === 'undefined') {
-        await new Promise(resolve => setTimeout(resolve, 1000));
-        if (typeof faceapi === 'undefined') {
-            console.error("face-api.js is not loaded.");
-            return;
-        }
+      console.error("face-api.js is not loaded yet.");
+      return;
     }
       
-    const detections = await faceapi.detectAllFaces(imageElement);
+    const detections = await faceapi.detectAllFaces(img);
     if (detections.length > 0) {
       const canvas = document.createElement('canvas');
       const ctx = canvas.getContext('2d');
-      canvas.width = imageElement.naturalWidth;
-      canvas.height = imageElement.naturalHeight;
-      ctx.drawImage(imageElement, 0, 0, canvas.width, canvas.height);
+      canvas.width = img.naturalWidth;
+      canvas.height = img.naturalHeight;
+      ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
 
       detections.forEach(detection => {
         const { x, y, width, height } = detection.box;
-        const mosaicSize = 10;
+        const mosaicSize = Math.min(width, height) / 10; // 顔のサイズに応じたモザイク
         for (let i = 0; i < width; i += mosaicSize) {
           for (let j = 0; j < height; j += mosaicSize) {
             const pixelData = ctx.getImageData(x + i, y + j, 1, 1).data;
@@ -61,48 +51,52 @@ async function applyMosaic(imageElement) {
         }
       });
       
-      canvas.className = imageElement.className;
-      imageElement.parentNode.replaceChild(canvas, imageElement);
+      canvas.className = img.className;
+      // 元のimg要素のスタイル属性もコピーする
+      canvas.style.cssText = img.style.cssText;
+      img.parentNode.replaceChild(canvas, img);
     }
   } catch (error) {
     console.error('Error applying mosaic:', error);
   }
 }
 
-function processAllImages() {
-    const images = document.querySelectorAll('ytd-thumbnail img, yt-thumbnail-view-model img, top-landscape-image-layout-view-model img, ytm-shorts-lockup-view-model img');
-    images.forEach(img => {
-        applyGrayscaleToImage(img);
-        applyMosaicToImage(img);
-    });
+function processImage(img) {
+    applyGrayscale(img);
+    applyMosaic(img);
 }
-
-function applyGrayscaleToImage(img) {
-    if (!img.classList.contains('grayscale')) {
-        img.classList.add('grayscale');
-    }
-}
-
-async function applyMosaicToImage(img) {
-    // モザイク処理は非同期なので、個別に呼び出す
-    await applyMosaic(img);
-}
-
 
 // =============================================
 // メイン処理
 // =============================================
 try {
-  processAllImages();
-  
-  const observer = new MutationObserver((mutations) => {
-    processAllImages();
-  });
+  // face-api.jsの読み込みを待つ
+  const checkFaceApi = setInterval(() => {
+    if (typeof faceapi !== 'undefined') {
+      clearInterval(checkFaceApi);
+      
+      // 初期読み込み時に表示されている画像を処理
+      const images = document.querySelectorAll('ytd-thumbnail img, yt-thumbnail-view-model img, top-landscape-image-layout-view-model img, ytm-shorts-lockup-view-model img');
+      images.forEach(processImage);
 
-  observer.observe(document.body, {
-    childList: true,
-    subtree: true,
-  });
+      // DOMの変更を監視
+      const observer = new MutationObserver((mutations) => {
+        mutations.forEach(mutation => {
+          mutation.addedNodes.forEach(node => {
+            if (node.nodeType === 1) { // ELEMENT_NODE
+              const newImages = node.querySelectorAll('ytd-thumbnail img, yt-thumbnail-view-model img, top-landscape-image-layout-view-model img, ytm-shorts-lockup-view-model img');
+              newImages.forEach(processImage);
+            }
+          });
+        });
+      });
+
+      observer.observe(document.body, {
+        childList: true,
+        subtree: true,
+      });
+    }
+  }, 500);
 
 } catch (e) {
   console.error("Faceless YouTube Error:", e);
