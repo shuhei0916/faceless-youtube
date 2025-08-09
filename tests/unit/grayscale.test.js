@@ -1,25 +1,34 @@
 const { applyGrayscale } = require('../../src/content/grayscale');
 
 describe('Grayscale Logic', () => {
-  test('should add grayscale class to thumbnail images', () => {
-    // DOMのセットアップ（チャンネルページとホームページの両方の構造を模倣）
+  test('should add grayscale class to all thumbnail types', () => {
+    // DOMのセットアップ（通常、ホームページ、スポンサー、ショート動画）
     document.body.innerHTML = `
       <ytd-thumbnail>
-        <img class="channel-page-thumb">
+        <img class="normal-thumb">
       </ytd-thumbnail>
       <yt-thumbnail-view-model>
         <img class="home-page-thumb">
       </yt-thumbnail-view-model>
+      <top-landscape-image-layout-view-model>
+        <img class="sponsor-thumb">
+      </top-landscape-image-layout-view-model>
+      <ytm-shorts-lockup-view-model>
+        <img class="shorts-thumb">
+      </ytm-shorts-lockup-view-model>
     `;
 
-    // Red: applyGrayscaleはまだ実装されていないため、このテストは失敗するはず
     applyGrayscale();
 
-    const channelPageImage = document.querySelector('.channel-page-thumb');
-    const homePageImage = document.querySelector('.home-page-thumb');
+    const normalThumb = document.querySelector('.normal-thumb');
+    const homePageThumb = document.querySelector('.home-page-thumb');
+    const sponsorThumb = document.querySelector('.sponsor-thumb');
+    const shortsThumb = document.querySelector('.shorts-thumb');
     
-    expect(channelPageImage.classList.contains('grayscale')).toBe(true);
-    // Red: このアサーションが失敗するはず
-    expect(homePageImage.classList.contains('grayscale')).toBe(true);
+    expect(normalThumb.classList.contains('grayscale')).toBe(true);
+    expect(homePageThumb.classList.contains('grayscale')).toBe(true);
+    // Red: 以下の2つのアサーションが失敗するはず
+    expect(sponsorThumb.classList.contains('grayscale')).toBe(true);
+    expect(shortsThumb.classList.contains('grayscale')).toBe(true);
   });
 });
