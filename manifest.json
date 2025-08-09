@@ -18,9 +18,6 @@
     "js": [
       "assets/face-api.js",
       "src/content/content_script.js"
-    ],
-    "css": [
-      "assets/css/main.css"
     ]
   }
 ],
