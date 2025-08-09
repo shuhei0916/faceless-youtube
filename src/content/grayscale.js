@@ -1,5 +1,5 @@
 function applyGrayscale() {
-  const images = document.querySelectorAll('ytd-thumbnail img');
+  const images = document.querySelectorAll('ytd-thumbnail img, yt-thumbnail-view-model img');
   images.forEach(img => {
     img.classList.add('grayscale');
   });

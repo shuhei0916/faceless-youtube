@@ -1,7 +1,7 @@
 function applyGrayscale() {
-  const images = document.querySelectorAll('ytd-thumbnail img');
+  // ホームページとチャンネルページの両方のセレクタに対応
+  const images = document.querySelectorAll('ytd-thumbnail img, yt-thumbnail-view-model img');
   images.forEach(img => {
-    // すでにクラスが付与されている場合は何もしない
     if (!img.classList.contains('grayscale')) {
       img.classList.add('grayscale');
     }
@@ -10,12 +10,9 @@ function applyGrayscale() {
 
 // スクリプトのメイン処理
 try {
-  // 初期読み込み時に実行
   applyGrayscale();
   
-  // 動的コンテンツに対応するため、MutationObserverを設定
   const observer = new MutationObserver((mutations) => {
-    // DOMに変更があるたびに実行
     applyGrayscale();
   });
 
