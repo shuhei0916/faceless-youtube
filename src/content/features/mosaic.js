@@ -1,59 +1,59 @@
-async function applyMosaic(imageElement) {
-  // 処理済み、またはimgでない場合は何もしない
-  if (!imageElement || !(imageElement instanceof HTMLImageElement) || imageElement.dataset.mosaicApplied) {
+async function applyMosaic(img, isModelLoaded) {
+  if (!img || !(img instanceof HTMLImageElement) || img.dataset.mosaicApplied || !isModelLoaded) {
     return;
   }
+
+  img.crossOrigin = 'anonymous';
   
-  // 画像が読み込まれていない場合は、読み込みを待つ
-  if (!imageElement.complete) {
+  if (!img.complete) {
     await new Promise(resolve => {
-      imageElement.onload = resolve;
-      imageElement.onerror = resolve; // エラーでも処理を止めない
+      img.onload = resolve;
+      img.onerror = resolve;
     });
   }
   
-  // 読み込み後でも、画像の幅や高さが0の場合は処理しない
-  if (imageElement.naturalWidth === 0 || imageElement.naturalHeight === 0) {
+  if (img.naturalWidth === 0 || img.naturalHeight === 0) {
     return;
   }
 
-  imageElement.dataset.mosaicApplied = 'true';
+  img.dataset.mosaicApplied = 'true';
 
   try {
-    const detections = await faceapi.detectAllFaces(imageElement);
+    // 顔検出のオプションをより精度の高いものに変更
+    const detections = await faceapi.detectAllFaces(img, new faceapi.SsdMobilenetv1Options());
     if (detections.length > 0) {
       const canvas = document.createElement('canvas');
       const ctx = canvas.getContext('2d');
-      canvas.width = imageElement.naturalWidth;
-      canvas.height = imageElement.naturalHeight;
-
-      // 元の画像を描画
-      ctx.drawImage(imageElement, 0, 0, canvas.width, canvas.height);
-
-      // 検出された各顔にモザイクをかける
-      detections.forEach(detection => {
-        const { x, y, width, height } = detection.box;
-        // 10x10のモザイク
-        const mosaicSize = 10;
-        for (let i = 0; i < width; i += mosaicSize) {
-          for (let j = 0; j < height; j += mosaicSize) {
-            const pixelData = ctx.getImageData(x + i, y + j, 1, 1).data;
-            ctx.fillStyle = `rgba(${pixelData[0]}, ${pixelData[1]}, ${pixelData[2]}, ${pixelData[3] / 255})`;
-            ctx.fillRect(x + i, y + j, mosaicSize, mosaicSize);
-          }
-        }
-      });
+      canvas.width = img.naturalWidth;
+      canvas.height = img.naturalHeight;
       
-      // 元のimg要素と同じクラスをcanvasに適用
-      canvas.className = imageElement.className;
-      imageElement.parentNode.replaceChild(canvas, imageElement);
+      // JSDOM (test) environment doesn't support canvas drawing well, so we skip it.
+      // The main purpose of the unit test is to check if the image is replaced by a canvas.
+      if (ctx) {
+        ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+
+        detections.forEach(detection => {
+          const { x, y, width, height } = detection.box;
+          const mosaicSize = Math.min(width, height) / 10;
+          for (let i = 0; i < width; i += mosaicSize) {
+            for (let j = 0; j < height; j += mosaicSize) {
+              const pixelData = ctx.getImageData(x + i, y + j, 1, 1).data;
+              ctx.fillStyle = `rgba(${pixelData[0]}, ${pixelData[1]}, ${pixelData[2]}, ${pixelData[3] / 255})`;
+              ctx.fillRect(x + i, y + j, mosaicSize, mosaicSize);
+            }
+          }
+        });
+      }
+      
+      canvas.className = img.className;
+      canvas.style.cssText = img.style.cssText;
+      if (img.parentNode) {
+        img.parentNode.replaceChild(canvas, img);
+      }
     }
   } catch (error) {
     console.error('Error applying mosaic:', error);
   }
 }
 
-// Node.jsのテスト環境でrequireできるようにエクスポート
-if (typeof module !== 'undefined' && module.exports) {
-  module.exports = { applyMosaic };
-}
+module.exports = { applyMosaic };
