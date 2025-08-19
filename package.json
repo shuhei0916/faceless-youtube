@@ -2,7 +2,6 @@
   "name": "faceless-youtube",
   "version": "1.0.0",
   "description": "YouTube中毒防止のため、サムネイル画像の顔を検出して黒塗りモザイクをかけるChrome拡張機能",
-  "type": "module",
   "main": "src/content/main.js",
   "scripts": {
     "test": "jest",
