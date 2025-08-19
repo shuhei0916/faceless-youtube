@@ -1,0 +1,35 @@
+{
+  "name": "faceless-youtube",
+  "version": "1.0.0",
+  "description": "YouTube中毒防止のため、サムネイル画像の顔を検出して黒塗りモザイクをかけるChrome拡張機能",
+  "main": "src/content/main.js",
+  "scripts": {
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "test:coverage": "jest --coverage",
+    "lint": "eslint src/**/*.js",
+    "build": "npm run test && npm run lint"
+  },
+  "keywords": ["chrome-extension", "youtube", "face-detection", "privacy"],
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "jest": "^29.0.0",
+    "jest-environment-jsdom": "^29.0.0",
+    "eslint": "^8.0.0",
+    "@eslint/js": "^9.0.0"
+  },
+  "dependencies": {
+    "@tensorflow/tfjs": "^4.0.0",
+    "@tensorflow-models/face-landmarks-detection": "^1.0.0"
+  },
+  "jest": {
+    "testEnvironment": "jsdom",
+    "testMatch": ["**/tests/**/*.test.js"],
+    "collectCoverageFrom": [
+      "src/**/*.js",
+      "!src/**/*.test.js"
+    ],
+    "setupFilesAfterEnv": ["<rootDir>/tests/setup.js"]
+  }
+}

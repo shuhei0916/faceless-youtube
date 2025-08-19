@@ -1,0 +1,16 @@
+/* ちらつき防止：ページ読み込み時に顔が見えないようにサムネイルを一時的に非表示 */
+.faceless-youtube-loading img[src*="i.ytimg.com"],
+.faceless-youtube-loading img[src*="yt3.ggpht.com"] {
+  opacity: 0 !important;
+  transition: opacity 0.3s ease-in-out;
+}
+
+/* 処理完了後に表示 */
+.faceless-youtube-processed img {
+  opacity: 1 !important;
+}
+
+/* モザイク処理された画像のスタイル */
+.faceless-youtube-blurred {
+  filter: none !important;
+}
