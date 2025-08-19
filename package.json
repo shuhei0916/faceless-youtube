@@ -7,8 +7,12 @@
     "test": "jest",
     "test:watch": "jest --watch",
     "test:coverage": "jest --coverage",
+    "test:unit": "jest tests/unit",
+    "test:integration": "jest tests/integration",
     "lint": "eslint src/**/*.js",
-    "build": "npm run test && npm run lint"
+    "lint:fix": "eslint src/**/*.js --fix",
+    "build": "npm run test && npm run lint",
+    "package": "npm run build && echo 'Build successful! Extension ready for Chrome Web Store.'"
   },
   "keywords": ["chrome-extension", "youtube", "face-detection", "privacy"],
   "author": "",

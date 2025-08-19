@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Faceless YouTube</title>
+    <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>🎭 Faceless YouTube</h1>
+            <p class="subtitle">YouTube中毒防止ツール</p>
+        </header>
+
+        <main class="main">
+            <!-- ステータス表示 -->
+            <div class="status-section">
+                <div class="status-indicator" id="statusIndicator">
+                    <div class="status-icon" id="statusIcon">⏳</div>
+                    <div class="status-text" id="statusText">読み込み中...</div>
+                </div>
+            </div>
+
+            <!-- 基本操作 -->
+            <div class="controls-section">
+                <button class="btn btn-primary" id="toggleBtn" disabled>
+                    <span id="toggleText">読み込み中...</span>
+                </button>
+            </div>
+
+            <!-- 設定 -->
+            <div class="settings-section">
+                <h3>設定</h3>
+                
+                <div class="setting-item">
+                    <label for="processingMode">処理モード:</label>
+                    <select id="processingMode" class="form-control">
+                        <option value="blackout">黒塗り</option>
+                        <option value="mosaic">モザイク</option>
+                    </select>
+                </div>
+
+                <div class="setting-item">
+                    <label class="checkbox-label">
+                        <input type="checkbox" id="autoStart">
+                        <span class="checkmark"></span>
+                        自動開始
+                    </label>
+                </div>
+            </div>
+
+            <!-- 統計情報 -->
+            <div class="stats-section" id="statsSection" style="display: none;">
+                <h3>統計</h3>
+                <div class="stats-grid">
+                    <div class="stat-item">
+                        <div class="stat-value" id="processedCount">-</div>
+                        <div class="stat-label">処理済み</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value" id="skippedCount">-</div>
+                        <div class="stat-label">スキップ</div>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <footer class="footer">
+            <p class="version">v1.0.0</p>
+            <div class="links">
+                <a href="#" id="helpLink">ヘルプ</a>
+                <a href="#" id="feedbackLink">フィードバック</a>
+            </div>
+        </footer>
+    </div>
+
+    <script src="popup.js"></script>
+</body>
+</html>
